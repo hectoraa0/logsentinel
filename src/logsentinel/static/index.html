@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LogSentinel</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>LogSentinel</h1>
+    <p class="sub">Attack detections from SSH and web server logs, mapped to MITRE ATT&amp;CK</p>
+  </header>
+
+  <main>
+    <section id="stats" class="cards" aria-label="Alert summary"></section>
+
+    <section>
+      <div class="toolbar" id="filters" role="group" aria-label="Filter by severity"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Severity</th><th>Rule</th><th>Source IP</th><th>Count</th>
+              <th>MITRE ATT&amp;CK</th><th>First seen (UTC)</th><th>Last seen (UTC)</th>
+            </tr>
+          </thead>
+          <tbody id="alerts"></tbody>
+        </table>
+      </div>
+      <p id="empty" class="empty" hidden>No alerts. Run <code>logsentinel analyze</code> first.</p>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

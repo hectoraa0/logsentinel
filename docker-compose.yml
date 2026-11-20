@@ -1,0 +1,40 @@
+name: logsentinel
+
+services:
+  # One-shot job: parse the sample logs and write alerts into the shared volume.
+  analyzer:
+    build: .
+    command:
+      - analyze
+      - --auth=/data/sample/auth.log
+      - --nginx=/data/sample/nginx_access.log
+      - --db=/var/lib/logsentinel/alerts.db
+      - --year=2026
+    volumes:
+      - ./data:/data:ro
+      - alerts-db:/var/lib/logsentinel
+    healthcheck:
+      disable: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+
+  # Long-running read-only dashboard.
+  dashboard:
+    build: .
+    depends_on:
+      analyzer:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:8000:8000" # localhost only; put a reverse proxy in front to expose it
+    volumes:
+      - alerts-db:/var/lib/logsentinel:ro
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  alerts-db:
